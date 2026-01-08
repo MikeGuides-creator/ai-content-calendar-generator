@@ -21,7 +21,7 @@ showEmailPreferences();
 }
 
 // Setup email button
-document.getElementById('setupEmail').addEventListener('click', setupEmailNotifications);
+emailjs.init("PGJNJQQlp4g7pNkgL");  // ← Your real User ID from dashboard;
 
 // Save preferences when Apply Optimizations is clicked
 document.getElementById('applyOptimizations')?.addEventListener('click', function() {
