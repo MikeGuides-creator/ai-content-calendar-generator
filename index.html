@@ -23,57 +23,15 @@
 <!-- Canonical -->
 <link rel="canonical" href="https://mikeguides.co/toolkit/content-calendar/" />
 
-<!-- Your existing CSS -->
-<link rel="stylesheet" href="/assets/css/site.css">
-
 <!-- Calendar-specific styles -->
 <link rel="stylesheet" href="calendar-styles.css">
 
-<!-- EmailJS for notifications -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-
+<!-- Fallback styles if calendar-styles.css doesn't load -->
 <style>
-/* Calendar-specific overrides using your design system */
-:root {
---calendar-primary: var(--mg-blue, #2563eb);
---calendar-success: var(--mg-green, #10b981);
---calendar-warning: #f59e0b;
---calendar-bg: #f8fafc;
-}
-
-/* Ensure calendar fits your existing layout */
-.mg-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 0 1rem;
-}
-
-/* Your existing button styles extended */
-.mg-btn-primary {
-background-color: var(--mg-blue);
-color: white;
-border-radius: 0.75rem;
-padding: 0.75rem 1.5rem;
-font-weight: 600;
-border: none;
-cursor: pointer;
-transition: opacity 0.2s;
-}
-
-.mg-btn-primary:hover {
-opacity: 0.9;
-}
-
-.mg-btn-success {
-background-color: var(--mg-green);
-color: white;
-border-radius: 0.75rem;
-padding: 0.75rem 1.5rem;
-font-weight: 600;
-border: none;
-cursor: pointer;
-transition: opacity 0.2s;
-}
+  /* Basic styles to ensure page works */
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; }
+  .mg-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  button { cursor: pointer; }
 </style>
 </head>
 
