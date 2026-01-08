@@ -1,0 +1,346 @@
+/* ============================================
+   AI CONTENT CALENDAR STYLES
+   Custom styles for the calendar display
+   ============================================ */
+
+/* Calendar Grid Layout */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+/* Calendar Day Container */
+.calendar-day {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-day:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.calendar-day.today {
+  border-color: #3b82f6;
+  border-width: 2px;
+  background-color: #eff6ff;
+}
+
+.calendar-day.weekend {
+  background-color: #f8fafc;
+}
+
+.calendar-day-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+/* Post Items */
+.post-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-left-width: 4px;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.post-item:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.post-item.platform-instagram {
+  border-left-color: #E4405F;
+}
+
+.post-item.platform-facebook {
+  border-left-color: #1877F2;
+}
+
+.post-item.platform-linkedin {
+  border-left-color: #0A66C2;
+}
+
+.post-item.platform-tiktok {
+  border-left-color: #000000;
+}
+
+.post-item.platform-twitter {
+  border-left-color: #1DA1F2;
+}
+
+.post-item.platform-pinterest {
+  border-left-color: #E60023;
+}
+
+/* Post Content Elements */
+.post-time {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.post-content {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: #334155;
+  font-weight: 500;
+}
+
+.post-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: capitalize;
+}
+
+/* Insight Bars for AI Panel */
+.insight-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.insight-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* Platform Tags */
+.platform-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.platform-tag.instagram {
+  background: #fdf2f8;
+  color: #be185d;
+}
+
+.platform-tag.facebook {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.platform-tag.linkedin {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.platform-tag.tiktok {
+  background: #f5f5f5;
+  color: #000000;
+}
+
+.platform-tag.twitter {
+  background: #f0f9ff;
+  color: #0ea5e9;
+}
+
+.platform-tag.pinterest {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Loading States */
+.loading-calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #64748b;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Calendar Controls */
+.calendar-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-control-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-control-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Export Buttons */
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .calendar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .calendar-day {
+    padding: 1rem;
+  }
+  
+  .post-item {
+    padding: 0.875rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem;
+  }
+  
+  .calendar-day {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #d1d5db;
+    box-shadow: none;
+  }
+  
+  .post-item {
+    border: 1px solid #e5e7eb;
+    border-left-width: 3px;
+  }
+  
+  /* Hide non-essential elements */
+  button, 
+  #aiInsights,
+  #emailPreferences,
+  footer {
+    display: none !important;
+  }
+}
+
+/* Animation for new posts */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-item {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+/* Calendar empty state */
+.calendar-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.calendar-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+/* Content type indicators */
+.content-type-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.375rem;
+}
+
+.content-type-indicator.educational {
+  background-color: #10b981;
+}
+
+.content-type-indicator.promotional {
+  background-color: #3b82f6;
+}
+
+.content-type-indicator.entertainment {
+  background-color: #f59e0b;
+}
+
+.content-type-indicator.engagement {
+  background-color: #8b5cf6;
+}
