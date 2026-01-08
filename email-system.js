@@ -6,9 +6,9 @@
 
 // Configuration - UPDATE THESE WITH YOUR EMAILJS CREDENTIALS
 const EMAIL_CONFIG = {
-service_id: 'YOUR_SERVICE_ID', // From EmailJS dashboard
+service_id: 'service_l8e23hp', // From EmailJS dashboard
 template_id: 'YOUR_TEMPLATE_ID', // From EmailJS dashboard
-user_id: 'YOUR_PUBLIC_USER_ID' // From EmailJS dashboard
+user_id: 'PGJNJQQlp4g7pNkgL' // From EmailJS dashboard
 };
 
 // Initialize email system
