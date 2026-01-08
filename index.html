@@ -26,14 +26,7 @@
 <!-- Calendar-specific styles -->
 <link rel="stylesheet" href="calendar-styles.css">
 
-<!-- Fallback styles if calendar-styles.css doesn't load -->
-<style>
-  /* Basic styles to ensure page works */
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; }
-  .mg-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-  button { cursor: pointer; }
-</style>
-  <!-- EmailJS for notifications -->
+<!-- EmailJS for notifications -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <style>
@@ -78,52 +71,10 @@
   cursor: pointer;
   transition: opacity 0.2s;
 }
-</style>
-  <!-- EmailJS for notifications -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-<style>
-/* Calendar-specific overrides using your design system */
-:root {
-  --calendar-primary: var(--mg-blue, #2563eb);
-  --calendar-success: var(--mg-green, #10b981);
-  --calendar-warning: #f59e0b;
-  --calendar-bg: #f8fafc;
-}
-
-/* Ensure calendar fits your existing layout */
-.mg-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Your existing button styles extended */
-.mg-btn-primary {
-  background-color: var(--mg-blue);
-  color: white;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.mg-btn-primary:hover {
-  opacity: 0.9;
-}
-
-.mg-btn-success {
-  background-color: var(--mg-green);
-  color: white;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
+/* Fallback styles if calendar-styles.css doesn't load */
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; }
+button { cursor: pointer; }
 </style>
 </head>
 
@@ -451,34 +402,34 @@ Part of the <a href="/toolkit/" class="text-[var(--mg-blue)] font-semibold">Mike
 <script src="email-system.js"></script>
 
 <script>
-// Initialize EmailJS (you'll need to add your own User ID)
+// Initialize EmailJS with YOUR User ID
 (function() {
-// Replace with your actual EmailJS User ID
-emailjs.init("PGJNJQQlp4g7pNkgL");
+  // REPLACE WITH YOUR ACTUAL EMAILJS USER ID
+  emailjs.init("YOUR_ACTUAL_USER_ID_HERE");
 })();
 
 // Simple UI interactions
 document.addEventListener('DOMContentLoaded', function() {
-// Audience size buttons
-document.querySelectorAll('.size-option').forEach(btn => {
-btn.addEventListener('click', function() {
-document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700'));
-this.classList.add('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700');
-document.getElementById('audienceSize').value = this.dataset.size;
-});
-});
+  // Audience size buttons
+  document.querySelectorAll('.size-option').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700'));
+      this.classList.add('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700');
+      document.getElementById('audienceSize').value = this.dataset.size;
+    });
+  });
 
-// Platform checkboxes styling
-document.querySelectorAll('input[name="platform"]').forEach(cb => {
-cb.addEventListener('change', function() {
-const parent = this.closest('label');
-if (this.checked) {
-parent.classList.add('bg-blue-50', 'border-blue-300');
-} else {
-parent.classList.remove('bg-blue-50', 'border-blue-300');
-}
-});
-});
+  // Platform checkboxes styling
+  document.querySelectorAll('input[name="platform"]').forEach(cb => {
+    cb.addEventListener('change', function() {
+      const parent = this.closest('label');
+      if (this.checked) {
+        parent.classList.add('bg-blue-50', 'border-blue-300');
+      } else {
+        parent.classList.remove('bg-blue-50', 'border-blue-300');
+      }
+    });
+  });
 });
 </script>
 </body>
