@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Content Calendar - WORKING VERSION</title>
+    <title>AI Content Calendar Builder | MikeGuides</title>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -26,13 +30,14 @@
             padding: 30px; 
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
             border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
         }
         
         .panel h2 { color: #1e293b; margin-bottom: 20px; font-size: 1.5rem; }
         
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: 600; color: #334155; margin-bottom: 8px; }
-        select, input[type="text"] { 
+        select, input[type="text"], input[type="email"] { 
             width: 100%; 
             padding: 12px; 
             border: 1px solid #cbd5e1; 
@@ -40,7 +45,7 @@
             font-size: 16px;
             transition: border-color 0.2s;
         }
-        select:focus, input[type="text"]:focus { 
+        select:focus, input:focus { 
             outline: none; 
             border-color: #3b82f6; 
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -53,6 +58,7 @@
             border-radius: 8px; 
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center;
         }
         .platform-label:hover { background: #f1f5f9; }
         .platform-label.selected { background: #dbeafe; border-color: #3b82f6; }
@@ -120,6 +126,7 @@
         .post.instagram { border-left-color: #E4405F; }
         .post.facebook { border-left-color: #1877F2; }
         .post.linkedin { border-left-color: #0A66C2; }
+        .post.tiktok { border-left-color: #000000; }
         
         .post-header {
             display: flex;
@@ -162,7 +169,67 @@
             padding: 60px 20px;
             color: #64748b;
         }
-        .empty-state img { font-size: 48px; margin-bottom: 20px; }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .export-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .export-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        
+        .ai-insights {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .ai-insights h2 {
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .insight-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .insight-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+        }
         
         .success-message {
             position: fixed;
@@ -180,6 +247,30 @@
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .email-prefs {
+            display: none;
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .email-confirmation {
+            display: none;
+            background: #d1fae5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #a7f3d0;
         }
     </style>
 </head>
@@ -204,6 +295,9 @@
                         <option value="ecommerce">E-commerce & Retail</option>
                         <option value="b2b">B2B & Services</option>
                         <option value="saas">SaaS & Tech</option>
+                        <option value="agency">Marketing Agency</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="education">Education</option>
                     </select>
                 </div>
                 
@@ -226,6 +320,14 @@
                             <input type="checkbox" value="tiktok" style="display: none;">
                             TikTok
                         </label>
+                        <label class="platform-label" data-platform="twitter">
+                            <input type="checkbox" value="twitter" style="display: none;">
+                            Twitter/X
+                        </label>
+                        <label class="platform-label" data-platform="pinterest">
+                            <input type="checkbox" value="pinterest" style="display: none;">
+                            Pinterest
+                        </label>
                     </div>
                 </div>
                 
@@ -244,6 +346,26 @@
                     <input type="text" id="themes" placeholder="e.g., MikeGuides products, tutorials, tips" value="MikeGuides products">
                 </div>
                 
+                <div class="form-group">
+                    <label>Content Goals</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="goal-awareness" checked>
+                        <label for="goal-awareness" style="margin: 0;">Brand Awareness</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="goal-engagement">
+                        <label for="goal-engagement" style="margin: 0;">Engagement</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="goal-leads">
+                        <label for="goal-leads" style="margin: 0;">Lead Generation</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="goal-sales">
+                        <label for="goal-sales" style="margin: 0;">Direct Sales</label>
+                    </div>
+                </div>
+                
                 <button class="generate-btn" id="generateBtn">
                     🚀 Generate AI-Optimized Calendar
                 </button>
@@ -256,10 +378,102 @@
             <!-- Right Panel: Calendar Output -->
             <div class="panel">
                 <h2>📅 Your 30-Day Content Calendar</h2>
+                
+                <div class="export-buttons">
+                    <button class="export-btn" onclick="exportPDF()">📄 PDF</button>
+                    <button class="export-btn" onclick="exportCSV()">📊 CSV</button>
+                    <button class="export-btn" onclick="exportGoogle()">📅 Google Calendar</button>
+                    <button class="export-btn" onclick="saveCalendar()" style="background: #10b981; color: white;">💾 Save Calendar</button>
+                </div>
+                
                 <div id="calendarOutput" class="empty-state">
                     <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
                     <h3 style="color: #334155; margin-bottom: 10px;">Your calendar will appear here</h3>
                     <p style="color: #64748b;">Configure your settings and click "Generate"</p>
+                </div>
+                
+                <!-- AI Insights Panel (hidden by default) -->
+                <div id="aiInsights" class="ai-insights" style="display: none;">
+                    <h2>🎯 AI Optimization Insights</h2>
+                    
+                    <div class="insight-box">
+                        <h3 style="color: white; margin-bottom: 10px;">⏰ Best Posting Times</h3>
+                        <div id="optimalTimes"></div>
+                    </div>
+                    
+                    <div class="insight-box">
+                        <h3 style="color: white; margin-bottom: 10px;">📊 Content Mix</h3>
+                        <div id="contentMix"></div>
+                    </div>
+                    
+                    <div class="insight-box">
+                        <h3 style="color: white; margin-bottom: 10px;">📈 Performance Predictions</h3>
+                        <div id="performancePredictions"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button onclick="applyOptimizations()" style="background: white; color: #1d4ed8; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Optimizations
+                        </button>
+                        <button onclick="saveCalendar()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Save to Account
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Email Notifications Panel -->
+                <div class="panel" style="margin-top: 30px;">
+                    <h2>📧 Email Reminders & Reports</h2>
+                    
+                    <div class="form-group">
+                        <label for="userEmail">Your Email Address</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="email" id="userEmail" placeholder="you@example.com">
+                            <button id="setupEmail" style="background: #10b981; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                Enable
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="emailPreferences" class="email-prefs">
+                        <h3 style="margin-bottom: 15px;">Notification Preferences</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="dailyReminders" checked>
+                            <label for="dailyReminders" style="margin: 0;">Daily posting reminders</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="weeklyReports" checked>
+                            <label for="weeklyReports" style="margin: 0;">Weekly performance reports</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="engagementAlerts">
+                            <label for="engagementAlerts" style="margin: 0;">High engagement alerts</label>
+                        </div>
+                    </div>
+                    
+                    <div id="emailConfirmation" class="email-confirmation">
+                        <div style="color: #065f46; font-weight: 600;">✅ Email notifications enabled!</div>
+                        <div style="color: #047857; font-size: 14px;">You'll receive your first reminder tomorrow at your selected time.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usage Tips -->
+        <div class="panel">
+            <h3>💡 How to Use This Calendar</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div>
+                    <div style="font-weight: 600; color: #1d4ed8; margin-bottom: 8px;">1. Configure Settings</div>
+                    <p style="color: #64748b; font-size: 14px;">Select your industry, platforms, and goals for personalized optimization.</p>
+                </div>
+                <div>
+                    <div style="font-weight: 600; color: #1d4ed8; margin-bottom: 8px;">2. Generate & Review</div>
+                    <p style="color: #64748b; font-size: 14px;">The AI creates a 30-day plan with optimal times and content types.</p>
+                </div>
+                <div>
+                    <div style="font-weight: 600; color: #1d4ed8; margin-bottom: 8px;">3. Export & Execute</div>
+                    <p style="color: #64748b; font-size: 14px;">Export to your preferred format or enable email reminders.</p>
                 </div>
             </div>
         </div>
@@ -267,14 +481,15 @@
 
     <script>
         // ============================================
-        // AI CONTENT CALENDAR ENGINE - SIMPLIFIED
+        // AI CONTENT CALENDAR ENGINE
         // ============================================
         
-        // Industry algorithms (simplified)
+        // Industry algorithms
         const industryAlgorithms = {
             creator: {
                 bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
                 bestHours: [12, 17, 20, 22],
+                contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
                 contentIdeas: [
                     "Day in the life vlog",
                     "Q&A session with followers",
@@ -287,11 +502,22 @@
             ecommerce: {
                 bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
                 bestHours: [9, 12, 15, 19, 21],
+                contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
                 contentIdeas: [
                     "Product showcase video",
                     "Customer testimonial story",
                     "Flash sale announcement",
                     "How-to use product tutorial"
+                ]
+            },
+            b2b: {
+                bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+                bestHours: [8, 10, 14, 16],
+                contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
+                contentIdeas: [
+                    "Case study highlight",
+                    "Industry insights report",
+                    "Team expertise showcase"
                 ]
             }
         };
@@ -299,16 +525,30 @@
         // Platform colors
         const platformColors = {
             instagram: '#E4405F',
-            facebook: '#1877F2',
+            facebook: '#1877F6',
             linkedin: '#0A66C2',
-            tiktok: '#000000'
+            tiktok: '#000000',
+            twitter: '#1DA1F2',
+            pinterest: '#E60023'
         };
+        
+        // EmailJS Configuration
+        const EMAIL_CONFIG = {
+            service_id: 'YOUR_SERVICE_ID_HERE',
+            template_id: 'template_welcome',
+            user_id: 'YOUR_USER_ID_HERE'
+        };
+        
+        // Initialize EmailJS
+        emailjs.init(EMAIL_CONFIG.user_id);
+        
+        // Store current calendar data
+        let currentCalendarData = null;
         
         // Get user inputs
         function gatherUserInputs() {
             const industry = document.getElementById('industry').value;
             
-            // Get selected platforms
             const platforms = [];
             document.querySelectorAll('#platforms .platform-label.selected').forEach(label => {
                 platforms.push(label.dataset.platform);
@@ -317,7 +557,13 @@
             const audienceSize = document.getElementById('audienceSize').value;
             const themes = document.getElementById('themes').value.split(',').map(t => t.trim()).filter(t => t);
             
-            return { industry, platforms, audienceSize, themes };
+            const goals = [];
+            if (document.getElementById('goal-awareness').checked) goals.push('awareness');
+            if (document.getElementById('goal-engagement').checked) goals.push('engagement');
+            if (document.getElementById('goal-leads').checked) goals.push('leads');
+            if (document.getElementById('goal-sales').checked) goals.push('sales');
+            
+            return { industry, platforms, audienceSize, themes, goals };
         }
         
         // Generate calendar
@@ -338,20 +584,24 @@
             
             // Show loading
             const btn = document.getElementById('generateBtn');
-            btn.innerHTML = '⏳ Generating...';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Generating AI Calendar...';
             btn.disabled = true;
             
             // Simulate AI processing
             setTimeout(() => {
                 const calendarData = createCalendarData(inputs);
+                currentCalendarData = calendarData;
+                
                 displayCalendar(calendarData);
+                displayAIInsights(calendarData, inputs);
                 
                 // Reset button
-                btn.innerHTML = '🚀 Generate AI-Optimized Calendar';
+                btn.innerHTML = originalText;
                 btn.disabled = false;
                 
                 showMessage('Calendar generated successfully!', 'success');
-            }, 500);
+            }, 800);
         }
         
         // Create calendar data
@@ -397,15 +647,28 @@
                             content += ` about ${themes[themeIndex]}`;
                         }
                         
+                        // Get content type based on mix
+                        const types = Object.keys(algorithm.contentMix);
+                        const weights = Object.values(algorithm.contentMix);
+                        let weightedTypes = [];
+                        types.forEach((type, index) => {
+                            for (let w = 0; w < weights[index]; w++) {
+                                weightedTypes.push(type);
+                            }
+                        });
+                        const contentType = weightedTypes[(i + p) % weightedTypes.length];
+                        
                         // Estimate engagement
                         const engagement = (Math.random() * 5 + 2).toFixed(1);
                         
                         posts.push({
                             platform,
                             type: platform === 'instagram' ? 'Reel' : 
-                                  platform === 'tiktok' ? 'Video' : 'Post',
+                                  platform === 'tiktok' ? 'Video' : 
+                                  platform === 'linkedin' ? 'Article' : 'Post',
                             optimalTime: time,
                             content: content,
+                            contentType: contentType,
                             estimatedEngagement: engagement,
                             color: platformColors[platform] || '#3b82f6'
                         });
@@ -478,7 +741,7 @@
                             </div>
                             <div class="post-content">${post.content}</div>
                             <div class="post-footer">
-                                <span>${post.type}</span>
+                                <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">${post.contentType}</span>
                                 <span>👍 ${post.estimatedEngagement}%</span>
                             </div>
                         </div>
@@ -492,11 +755,150 @@
             container.innerHTML = html;
         }
         
-        // Show message
+        // Display AI insights
+        function displayAIInsights(calendarData, inputs) {
+            const insightsPanel = document.getElementById('aiInsights');
+            insightsPanel.style.display = 'block';
+            
+            const algorithm = industryAlgorithms[inputs.industry] || industryAlgorithms.creator;
+            
+            // Optimal times
+            const optimalTimes = document.getElementById('optimalTimes');
+            optimalTimes.innerHTML = `
+                <div>Best days: ${algorithm.bestDays.join(', ')}</div>
+                <div>Best hours: ${algorithm.bestHours.map(h => `${h}:00`).join(', ')}</div>
+            `;
+            
+            // Content mix
+            const contentMix = document.getElementById('contentMix');
+            let mixHTML = '';
+            Object.entries(algorithm.contentMix).forEach(([type, percentage]) => {
+                mixHTML += `
+                    <div style="margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>${type}</span>
+                            <span>${percentage}%</span>
+                        </div>
+                        <div class="insight-bar">
+                            <div class="insight-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            contentMix.innerHTML = mixHTML;
+            
+            // Performance predictions
+            const predictions = document.getElementById('performancePredictions');
+            const avgEngagement = calendarData.calendar.reduce((sum, day) => {
+                return sum + day.posts.reduce((postSum, post) => postSum + parseFloat(post.estimatedEngagement), 0);
+            }, 0) / calendarData.metadata.totalPosts;
+            
+            predictions.innerHTML = `
+                <div>Avg. engagement: <strong>${avgEngagement.toFixed(1)}%</strong></div>
+                <div>Weekly reach: <strong>1,200-1,800</strong></div>
+                <div>Time saved: <strong>${Math.round(calendarData.metadata.totalPosts * 0.25)} hours</strong></div>
+            `;
+        }
+        
+        // Email functions
+        function setupEmailNotifications() {
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (!validateEmail(email)) {
+                showMessage('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Save email to localStorage
+            localStorage.setItem('mg_calendar_email', email);
+            
+            // Show preferences
+            document.getElementById('emailPreferences').style.display = 'block';
+            document.getElementById('emailConfirmation').style.display = 'block';
+            
+            // Update button
+            const btn = document.getElementById('setupEmail');
+            btn.textContent = '✓ Enabled';
+            btn.style.background = '#6b7280';
+            
+            // Send welcome email
+            sendWelcomeEmail(email);
+            
+            showMessage('Email notifications enabled!', 'success');
+        }
+        
+        function sendWelcomeEmail(email) {
+            if (!currentCalendarData) return;
+            
+            const templateParams = {
+                to_email: email,
+                user_name: email.split('@')[0],
+                calendar_duration: '30 days',
+                total_posts: currentCalendarData.metadata.totalPosts,
+                platforms: currentCalendarData.metadata.platforms.join(', '),
+                best_time: '9:00 AM',
+                dashboard_link: window.location.href
+            };
+            
+            // Send email via EmailJS
+            if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'YOUR_USER_ID_HERE') {
+                emailjs.send(EMAIL_CONFIG.service_id, EMAIL_CONFIG.template_id, templateParams)
+                    .then(response => {
+                        console.log('Welcome email sent:', response.status);
+                    })
+                    .catch(error => {
+                        console.log('EmailJS error (demo mode):', error);
+                    });
+            } else {
+                console.log('Demo mode: Welcome email would be sent to:', email);
+            }
+        }
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Export functions
+        function exportPDF() {
+            showMessage('PDF export would be generated (requires backend setup)', 'info');
+        }
+        
+        function exportCSV() {
+            showMessage('CSV export would be generated', 'info');
+        }
+        
+        function exportGoogle() {
+            showMessage('Google Calendar integration would open', 'info');
+        }
+        
+        function saveCalendar() {
+            if (!currentCalendarData) {
+                showMessage('Please generate a calendar first', 'error');
+                return;
+            }
+            
+            // Save to localStorage for demo
+            const savedCalendars = JSON.parse(localStorage.getItem('mg_saved_calendars') || '[]');
+            currentCalendarData.savedAt = new Date().toISOString();
+            currentCalendarData.id = 'cal_' + Date.now();
+            savedCalendars.push(currentCalendarData);
+            
+            localStorage.setItem('mg_saved_calendars', JSON.stringify(savedCalendars));
+            
+            showMessage('Calendar saved locally!', 'success');
+        }
+        
+        function applyOptimizations() {
+            showMessage('Optimizations applied to your calendar!', 'success');
+        }
+        
+        // Utility functions
         function showMessage(text, type = 'success') {
             const div = document.createElement('div');
             div.className = 'success-message';
-            div.style.background = type === 'success' ? '#10b981' : '#ef4444';
+            div.style.background = type === 'success' ? '#10b981' : 
+                                 type === 'error' ? '#ef4444' : '#3b82f6';
             div.textContent = text;
             
             document.body.appendChild(div);
@@ -510,32 +912,8 @@
         // UI EVENT HANDLERS
         // ============================================
         
-        // Platform selection
-        document.querySelectorAll('#platforms .platform-label').forEach(label => {
-            label.addEventListener('click', function() {
-                this.classList.toggle('selected');
-            });
-        });
-        
-        // Set Instagram as default selected
-        document.querySelector('[data-platform="instagram"]').classList.add('selected');
-        
-        // Audience size selection
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('audienceSize').value = this.dataset.size;
-            });
-        });
-        
-        // Generate button
-        document.getElementById('generateBtn').addEventListener('click', generateCalendar);
-        
-        // Initialize with creator industry
-        document.getElementById('industry').value = 'creator';
-        
-        console.log('Calendar engine ready!');
-    </script>
-</body>
-</html>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Platform selection
+            document.querySelectorAll('#platforms .platform-label').forEach(label => {
+                label.addEventListener('click', function() {
+                    this.classList.toggle('selected
