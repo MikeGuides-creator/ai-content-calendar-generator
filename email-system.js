@@ -7,8 +7,8 @@
 // Configuration - UPDATE THESE WITH YOUR EMAILJS CREDENTIALS
 const EMAIL_CONFIG = {
   service_id: 'service_l8e23hp',     // From Email Services (gmail connection)
+   template_id: 'service_l8e23hp',     // Your template ID
   user_id: 'PGJNJQQlp4g7pNkgL'            // From dashboard (Public Key)
-  // NO template_id needed - we'll handle it differently
 };
 
 // Initialize email system
