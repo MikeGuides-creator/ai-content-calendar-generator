@@ -913,7 +913,14 @@
         // ============================================
         
         document.addEventListener('DOMContentLoaded', function() {
-            // Platform selection
-            document.querySelectorAll('#platforms .platform-label').forEach(label => {
-                label.addEventListener('click', function() {
-                    this.classList.toggle('selected
+           // Platform selection
+document.querySelectorAll('#platforms .platform-label').forEach(label => {
+    label.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        // Update the hidden checkbox
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.checked = this.classList.contains('selected');
+        }
+    });
+});
