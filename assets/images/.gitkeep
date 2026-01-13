@@ -1,1 +1,19 @@
+You can now:
 
+Visit your GitHub repo: https://github.com/MikeGuides-creator/ai-content-calendar-generator
+
+Continue development: Make changes locally, then:
+
+bash
+git add .
+git commit -m "Your commit message"
+git push origin main
+Set up GitHub Pages (if you want to host the site):
+
+Go to repo Settings → Pages
+
+Select "Deploy from a branch"
+
+Choose main branch and / (root) folder
+
+Save
