@@ -201,7 +201,11 @@
 <body>
     <div class="container">
         <header>
+<<<<<<< HEAD
             <span class="tag">🚀 Human and AI-Powered Tool</span>
+=======
+            <span class="tag">🚀 AI-Powered Tool</span>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
             <h1>AI Content Calendar Builder</h1>
             <p>Generate a strategic 30-day content plan optimized by algorithms</p>
         </header>
@@ -312,6 +316,7 @@
     // ============================================
     
    // Replace the industryAlgorithms object in your index.html
+<<<<<<< HEAD
 const industryAlgorithms = {
     'guide-builder': {
         bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
@@ -369,6 +374,8 @@ const industryAlgorithms = {
     reddit: '#FF4500'
 };
 
+=======
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
 const platformAlgorithms = {
     instagram: {
         postTypes: ['Reel', 'Carousel', 'Single Image', 'Story Series'],
@@ -402,11 +409,28 @@ const platformAlgorithms = {
     }
 };
     
+<<<<<<< HEAD
     // EmailJS Configuration
     const EMAIL_CONFIG = {
         service_id: 'YOUR_SERVICE_ID_HERE',
         template_id: 'template_welcome',
         user_id: 'YOUR_USER_ID_HERE'
+=======
+    // Platform colors
+    const platformColors = {
+    instagram: '#E4405F',
+    facebook: '#1877F2',
+    tiktok: '#000000',
+    discourse: '#00a2e8',
+    reddit: '#FF4500'
+};
+    
+    // EmailJS Configuration
+    const EMAIL_CONFIG = {
+        service_id: 'service_l8e23hp',
+        template_id: 'service_l8e23hp',
+        user_id: 'PGJNJQQlp4g7pNkgL'
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     };
     
     // Initialize EmailJS
@@ -431,6 +455,7 @@ const platformAlgorithms = {
         
         return { industry, platforms, audienceSize, themes };
     }
+<<<<<<< HEAD
 
 // Hashtag Generator Function
 function generateHashtags(platform, industry, contentThemes) {
@@ -485,6 +510,9 @@ function generateHashtags(platform, industry, contentThemes) {
 // In createCalendarData function, add to each post:
 hashtags: generateHashtags(platform, industry, themes)   
  
+=======
+    
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     // Generate calendar
     function generateCalendar() {
         console.log('=== GENERATING CALENDAR ===');
@@ -666,6 +694,7 @@ hashtags: generateHashtags(platform, industry, themes)
         container.innerHTML = html;
     }
     
+<<<<<<< HEAD
 	// Hashtag Generator Function
 function generateHashtags(platform, industry, contentThemes) {
     const platformStrategies = {
@@ -718,6 +747,8 @@ function generateHashtags(platform, industry, contentThemes) {
 // Update the post generation to include hashtags
 // In createCalendarData function, add to each post:
 hashtags: generateHashtags(platform, industry, themes)
+=======
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     // Display AI insights
     function displayAIInsights(calendarData, inputs) {
         const insightsPanel = document.getElementById('aiInsights');
@@ -772,8 +803,13 @@ hashtags: generateHashtags(platform, industry, themes)
         };
         
         // Send email via EmailJS
+<<<<<<< HEAD
         if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'PGJNJQQlp4g7pNkgL') {
             emailjs.send(EMAIL_CONFIG.service_l8e23hp, EMAIL_CONFIG.service_l8e23hp, templateParams)
+=======
+        if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'YOUR_USER_ID_HERE') {
+            emailjs.send(EMAIL_CONFIG.service_id, EMAIL_CONFIG.template_id, templateParams)
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
                 .then(response => {
                     console.log('Welcome email sent:', response.status);
                 })
@@ -880,4 +916,8 @@ hashtags: generateHashtags(platform, industry, themes)
     });
     </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6

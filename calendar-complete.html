@@ -201,7 +201,11 @@
 <body>
     <div class="container">
         <header>
+<<<<<<< HEAD
             <span class="tag">🚀 Human and AI-Powered Tool</span>
+=======
+            <span class="tag">🚀 AI-Powered Tool</span>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
             <h1>AI Content Calendar Builder</h1>
             <p>Generate a strategic 30-day content plan optimized by algorithms</p>
         </header>
@@ -222,6 +226,7 @@
                     </select>
                 </div>
                 
+<<<<<<< HEAD
                 <div class="platforms" id="platforms">
     <label class="platform-label selected" data-platform="instagram">
         <input type="checkbox" value="instagram" checked style="display: none;">
@@ -244,6 +249,29 @@
         Reddit
     </label>
 </div>
+=======
+                <div class="form-group">
+                    <label>Content Platforms</label>
+                    <div class="platforms" id="platforms">
+                        <label class="platform-label selected" data-platform="instagram">
+                            <input type="checkbox" value="instagram" checked style="display: none;">
+                            Instagram
+                        </label>
+                        <label class="platform-label" data-platform="facebook">
+                            <input type="checkbox" value="facebook" style="display: none;">
+                            Facebook
+                        </label>
+                        <label class="platform-label" data-platform="linkedin">
+                            <input type="checkbox" value="linkedin" style="display: none;">
+                            LinkedIn
+                        </label>
+                        <label class="platform-label" data-platform="tiktok">
+                            <input type="checkbox" value="tiktok" style="display: none;">
+                            TikTok
+                        </label>
+                    </div>
+                </div>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
                 
                 <div class="form-group">
                     <label>Audience Size</label>
@@ -311,6 +339,7 @@
     // AI CONTENT CALENDAR ENGINE - FIXED VERSION
     // ============================================
     
+<<<<<<< HEAD
    // Replace the industryAlgorithms object in your index.html
 const industryAlgorithms = {
     'guide-builder': {
@@ -401,6 +430,55 @@ const platformAlgorithms = {
         hashtagCount: 'Subreddit-specific, no hashtags'
     }
 };
+=======
+    // Industry algorithms
+    const industryAlgorithms = {
+        creator: {
+            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
+            bestHours: [12, 17, 20, 22],
+            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
+            contentIdeas: [
+                "Day in the life vlog",
+                "Q&A session with followers",
+                "MikeGuides product showcase",
+                "Behind-the-scenes creation",
+                "Tutorial on using MikeGuides",
+                "Success story with MikeGuides"
+            ]
+        },
+        ecommerce: {
+            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
+            bestHours: [9, 12, 15, 19, 21],
+            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
+            contentIdeas: [
+                "Product showcase video",
+                "Customer testimonial story",
+                "Flash sale announcement",
+                "How-to use product tutorial"
+            ]
+        },
+        b2b: {
+            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+            bestHours: [8, 10, 14, 16],
+            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
+            contentIdeas: [
+                "Case study highlight",
+                "Industry insights report",
+                "Team expertise showcase"
+            ]
+        }
+    };
+    
+    // Platform colors
+    const platformColors = {
+        instagram: '#E4405F',
+        facebook: '#1877F6',
+        linkedin: '#0A66C2',
+        tiktok: '#000000',
+        twitter: '#1DA1F2',
+        pinterest: '#E60023'
+    };
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     
     // EmailJS Configuration
     const EMAIL_CONFIG = {
@@ -431,6 +509,7 @@ const platformAlgorithms = {
         
         return { industry, platforms, audienceSize, themes };
     }
+<<<<<<< HEAD
 
 // Hashtag Generator Function
 function generateHashtags(platform, industry, contentThemes) {
@@ -485,6 +564,9 @@ function generateHashtags(platform, industry, contentThemes) {
 // In createCalendarData function, add to each post:
 hashtags: generateHashtags(platform, industry, themes)   
  
+=======
+    
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     // Generate calendar
     function generateCalendar() {
         console.log('=== GENERATING CALENDAR ===');
@@ -666,6 +748,7 @@ hashtags: generateHashtags(platform, industry, themes)
         container.innerHTML = html;
     }
     
+<<<<<<< HEAD
 	// Hashtag Generator Function
 function generateHashtags(platform, industry, contentThemes) {
     const platformStrategies = {
@@ -718,6 +801,8 @@ function generateHashtags(platform, industry, contentThemes) {
 // Update the post generation to include hashtags
 // In createCalendarData function, add to each post:
 hashtags: generateHashtags(platform, industry, themes)
+=======
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     // Display AI insights
     function displayAIInsights(calendarData, inputs) {
         const insightsPanel = document.getElementById('aiInsights');
@@ -772,8 +857,13 @@ hashtags: generateHashtags(platform, industry, themes)
         };
         
         // Send email via EmailJS
+<<<<<<< HEAD
         if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'PGJNJQQlp4g7pNkgL') {
             emailjs.send(EMAIL_CONFIG.service_l8e23hp, EMAIL_CONFIG.service_l8e23hp, templateParams)
+=======
+        if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'YOUR_USER_ID_HERE') {
+            emailjs.send(EMAIL_CONFIG.service_id, EMAIL_CONFIG.template_id, templateParams)
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
                 .then(response => {
                     console.log('Welcome email sent:', response.status);
                 })
@@ -880,4 +970,8 @@ hashtags: generateHashtags(platform, industry, themes)
     });
     </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
