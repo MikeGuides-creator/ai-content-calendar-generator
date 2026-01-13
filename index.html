@@ -336,7 +336,6 @@
     // AI CONTENT CALENDAR ENGINE - FIXED VERSION
     // ============================================
     
-<<<<<<< HEAD
    // Replace the industryAlgorithms object in your index.html
 const industryAlgorithms = {
     'guide-builder': {
@@ -427,57 +426,8 @@ const platformAlgorithms = {
         hashtagCount: 'Subreddit-specific, no hashtags'
     }
 };
-=======
-    // Industry algorithms
-    const industryAlgorithms = {
-        creator: {
-            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
-            bestHours: [12, 17, 20, 22],
-            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
-            contentIdeas: [
-                "Day in the life vlog",
-                "Q&A session with followers",
-                "MikeGuides product showcase",
-                "Behind-the-scenes creation",
-                "Tutorial on using MikeGuides",
-                "Success story with MikeGuides"
-            ]
-        },
-        ecommerce: {
-            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
-            bestHours: [9, 12, 15, 19, 21],
-            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
-            contentIdeas: [
-                "Product showcase video",
-                "Customer testimonial story",
-                "Flash sale announcement",
-                "How-to use product tutorial"
-            ]
-        },
-        b2b: {
-            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
-            bestHours: [8, 10, 14, 16],
-            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
-            contentIdeas: [
-                "Case study highlight",
-                "Industry insights report",
-                "Team expertise showcase"
-            ]
-        }
-    };
-    
-    // Platform colors
-    const platformColors = {
-        instagram: '#E4405F',
-        facebook: '#1877F6',
-        linkedin: '#0A66C2',
-        tiktok: '#000000',
-        twitter: '#1DA1F2',
-        pinterest: '#E60023'
-    };
->>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
-    
-    // EmailJS Configuration
+
+        // EmailJS Configuration
     const EMAIL_CONFIG = {
         service_id: 'YOUR_SERVICE_ID_HERE',
         template_id: 'template_welcome',
@@ -506,7 +456,6 @@ const platformAlgorithms = {
         
         return { industry, platforms, audienceSize, themes };
     }
-<<<<<<< HEAD
 
 // Hashtag Generator Function
 function generateHashtags(platform, industry, contentThemes) {
@@ -561,9 +510,6 @@ function generateHashtags(platform, industry, contentThemes) {
 // In createCalendarData function, add to each post:
 hashtags: generateHashtags(platform, industry, themes)   
  
-=======
-    
->>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     // Generate calendar
     function generateCalendar() {
         console.log('=== GENERATING CALENDAR ===');
