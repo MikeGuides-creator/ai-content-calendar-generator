@@ -310,43 +310,54 @@
     // AI CONTENT CALENDAR ENGINE - FIXED VERSION
     // ============================================
     
-    // Industry algorithms
-    const industryAlgorithms = {
-        creator: {
-            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
-            bestHours: [12, 17, 20, 22],
-            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
-            contentIdeas: [
-                "Day in the life vlog",
-                "Q&A session with followers",
-                "MikeGuides product showcase",
-                "Behind-the-scenes creation",
-                "Tutorial on using MikeGuides",
-                "Success story with MikeGuides"
-            ]
-        },
-        ecommerce: {
-            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
-            bestHours: [9, 12, 15, 19, 21],
-            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
-            contentIdeas: [
-                "Product showcase video",
-                "Customer testimonial story",
-                "Flash sale announcement",
-                "How-to use product tutorial"
-            ]
-        },
-        b2b: {
-            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
-            bestHours: [8, 10, 14, 16],
-            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
-            contentIdeas: [
-                "Case study highlight",
-                "Industry insights report",
-                "Team expertise showcase"
-            ]
-        }
-    };
+   // Replace the industryAlgorithms object in your index.html
+const industryAlgorithms = {
+    'guide-builder': {
+        bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+        bestHours: [10, 14, 16, 20],
+        contentMix: { educational: 60, promotional: 20, entertainment: 10, engagement: 10 },
+        contentIdeas: [
+            "Step-by-step tutorial",
+            "Template showcase",
+            "Case study: Successful guide implementation",
+            "Common mistakes to avoid",
+            "Advanced tips for power users",
+            "Integration with other tools"
+        ],
+        hashtagStrategy: '#howto #tutorial #guide #tips #learning'
+    },
+    'content-creator': {
+        bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
+        bestHours: [12, 17, 20, 22],
+        contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
+        contentIdeas: [
+            "Behind-the-scenes creation process",
+            "Q&A with your audience",
+            "Collaboration announcement",
+            "Content creation tips",
+            "Tools and software you use",
+            "Day in the life vlog",
+            "Success metrics and analytics"
+        ],
+        hashtagStrategy: '#contentcreator #digitalcreator #creatoreconomy #contenttips'
+    },
+    'social-campaigns': {
+        bestDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        bestHours: [9, 12, 15, 18, 21],
+        contentMix: { educational: 20, promotional: 40, entertainment: 25, engagement: 15 },
+        contentIdeas: [
+            "Campaign launch announcement",
+            "User-generated content feature",
+            "Limited-time offer",
+            "Influencer collaboration",
+            "Campaign results preview",
+            "Interactive poll or contest",
+            "Testimonial highlight",
+            "Campaign behind-the-scenes"
+        ],
+        hashtagStrategy: '#campaign #socialmedia #marketing #digitalmarketing #promotion'
+    }
+};
     
     // Platform colors
     const platformColors = {
