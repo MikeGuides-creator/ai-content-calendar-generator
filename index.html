@@ -1,436 +1,734 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<title>AI Content Calendar Builder | MikeGuides Toolkit</title>
-<meta name="description" content="Generate a strategic 30-day content plan optimized by AI algorithms. Industry-specific timing, platform optimization, and performance predictions.">
-
-<!-- Open Graph / Social -->
-<meta property="og:title" content="AI Content Calendar Builder | MikeGuides">
-<meta property="og:description" content="Generate AI-optimized content calendars with industry-specific algorithms.">
-<meta property="og:image" content="https://mikeguides.co/assets/images/og/mikeguides-home-xmas.v20251127a.png">
-<meta property="og:url" content="https://mikeguides.co/toolkit/content-calendar/">
-<meta property="og:type" content="website">
-
-<!-- Twitter / X -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AI Content Calendar Builder | MikeGuides">
-<meta name="twitter:description" content="Generate AI-optimized content calendars with industry-specific algorithms.">
-<meta name="twitter:image" content="https://mikeguides.co/assets/images/og/mikeguides-home-xmas.v20251127a.png">
-
-<!-- Canonical -->
-<link rel="canonical" href="https://mikeguides.co/toolkit/content-calendar/" />
-
-<!-- Calendar-specific styles -->
-<link rel="stylesheet" href="calendar-styles.css">
-
-<!-- EmailJS for notifications -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-<style>
-/* Calendar-specific overrides using your design system */
-:root {
-  --calendar-primary: var(--mg-blue, #2563eb);
-  --calendar-success: var(--mg-green, #10b981);
-  --calendar-warning: #f59e0b;
-  --calendar-bg: #f8fafc;
-}
-
-/* Ensure calendar fits your existing layout */
-.mg-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Your existing button styles extended */
-.mg-btn-primary {
-  background-color: var(--mg-blue);
-  color: white;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.mg-btn-primary:hover {
-  opacity: 0.9;
-}
-
-.mg-btn-success {
-  background-color: var(--mg-green);
-  color: white;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-/* Fallback styles if calendar-styles.css doesn't load */
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; }
-button { cursor: pointer; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Calendar Builder | MikeGuides</title>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style>
+        /* BASIC STYLES */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc; 
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { color: #1e293b; margin-bottom: 10px; }
+        .tag { 
+            display: inline-block; 
+            background: #dbeafe; 
+            color: #1e40af; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+        }
+        
+        .panels { 
+            display: grid; 
+            grid-template-columns: 1fr 2fr; 
+            gap: 30px; 
+        }
+        @media (max-width: 768px) { 
+            .panels { grid-template-columns: 1fr; } 
+        }
+        
+        .panel { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 30px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        
+        .panel h2 { color: #1e293b; margin-bottom: 20px; font-size: 1.5rem; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; color: #334155; margin-bottom: 8px; }
+        select, input[type="text"], input[type="email"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            font-size: 16px;
+        }
+        
+        .platforms { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .platform-label { 
+            padding: 12px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+        .platform-label:hover { background: #f1f5f9; }
+        .platform-label.selected { background: #dbeafe; border-color: #3b82f6; }
+        
+        .size-buttons { display: flex; gap: 10px; }
+        .size-btn { 
+            flex: 1; 
+            padding: 12px; 
+            text-align: center; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            cursor: pointer;
+        }
+        .size-btn:hover { background: #f1f5f9; }
+        .size-btn.active { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+        
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .calendar-day {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .post {
+            background: #f8fafc;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .post.instagram { border-left-color: #E4405F; }
+        .post.facebook { border-left-color: #1877F2; }
+        .post.linkedin { border-left-color: #0A66C2; }
+        .post.tiktok { border-left-color: #000000; }
+        .post.twitter { border-left-color: #1DA1F2; }
+        .post.pinterest { border-left-color: #E60023; }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .post-time {
+            font-weight: 600;
+            color: #1e40af;
+            background: #dbeafe;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .post-platform {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: capitalize;
+        }
+        
+        .post-content {
+            font-size: 15px;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .ai-insights {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        .email-prefs, .email-confirmation {
+            display: none;
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+    </style>
 </head>
+<body>
+    <div class="container">
+        <header>
+            <span class="tag">🚀 AI-Powered Tool</span>
+            <h1>AI Content Calendar Builder</h1>
+            <p>Generate a strategic 30-day content plan optimized by algorithms</p>
+        </header>
+        
+        <div class="panels">
+            <!-- Left Panel: Settings -->
+            <div class="panel">
+                <h2>⚙️ Calendar Settings</h2>
+                
+                <div class="form-group">
+                    <label for="industry">Industry / Business Type</label>
+                    <select id="industry">
+                        <option value="">Select your industry</option>
+                        <option value="creator" selected>Content Creator</option>
+                        <option value="ecommerce">E-commerce & Retail</option>
+                        <option value="b2b">B2B & Services</option>
+                        <option value="saas">SaaS & Tech</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Content Platforms</label>
+                    <div class="platforms" id="platforms">
+                        <label class="platform-label selected" data-platform="instagram">
+                            <input type="checkbox" value="instagram" checked style="display: none;">
+                            Instagram
+                        </label>
+                        <label class="platform-label" data-platform="facebook">
+                            <input type="checkbox" value="facebook" style="display: none;">
+                            Facebook
+                        </label>
+                        <label class="platform-label" data-platform="linkedin">
+                            <input type="checkbox" value="linkedin" style="display: none;">
+                            LinkedIn
+                        </label>
+                        <label class="platform-label" data-platform="tiktok">
+                            <input type="checkbox" value="tiktok" style="display: none;">
+                            TikTok
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Audience Size</label>
+                    <div class="size-buttons">
+                        <div class="size-btn active" data-size="small">Small<br><small>&lt; 10K</small></div>
+                        <div class="size-btn" data-size="medium">Medium<br><small>10K-100K</small></div>
+                        <div class="size-btn" data-size="large">Large<br><small>100K+</small></div>
+                    </div>
+                    <input type="hidden" id="audienceSize" value="small">
+                </div>
+                
+                <div class="form-group">
+                    <label for="themes">Content Themes/Topics</label>
+                    <input type="text" id="themes" placeholder="e.g., MikeGuides products, tutorials, tips" value="MikeGuides products">
+                </div>
+                
+                <button class="generate-btn" id="generateBtn">
+                    🚀 Generate AI-Optimized Calendar
+                </button>
+                
+                <p style="text-align: center; margin-top: 15px; color: #64748b; font-size: 14px;">
+                    No account required • 100% private • Algorithm-powered
+                </p>
+            </div>
+            
+            <!-- Right Panel: Calendar Output -->
+            <div class="panel">
+                <h2>📅 Your 30-Day Content Calendar</h2>
+                
+                <div id="calendarOutput" class="empty-state">
+                    <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
+                    <h3 style="color: #334155; margin-bottom: 10px;">Your calendar will appear here</h3>
+                    <p style="color: #64748b;">Configure your settings and click "Generate"</p>
+                </div>
+                
+                <!-- AI Insights Panel -->
+                <div id="aiInsights" class="ai-insights">
+                    <h2>🎯 AI Optimization Insights</h2>
+                    <div id="insightsContent">Insights will appear here after generation</div>
+                </div>
+                
+                <!-- Email Panel -->
+                <div class="panel" style="margin-top: 30px;">
+                    <h2>📧 Email Reminders</h2>
+                    <div class="form-group">
+                        <label for="userEmail">Your Email Address</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="email" id="userEmail" placeholder="you@example.com">
+                            <button id="setupEmail" style="background: #10b981; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                Enable
+                            </button>
+                        </div>
+                    </div>
+                    <div id="emailConfirmation" class="email-confirmation">
+                        ✅ Email notifications enabled!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<body class="min-h-screen flex flex-col bg-slate-50">
-<!-- Reuse your existing header -->
-<header class="max-w-6xl mx-auto px-6 py-6 w-full flex items-center justify-between">
-<a href="/" class="brand text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-<span class="inline-block w-2.5 h-6 rounded bg-[var(--mg-blue)]"></span>
-MikeGuides
-</a>
-<nav class="flex gap-5 text-sm font-semibold">
-<a class="hover:text-[var(--mg-blue)]" href="/">Home</a>
-<a class="hover:text-[var(--mg-blue)]" href="/guides/">Guides</a>
-<a class="hover:text-[var(--mg-blue)]" href="/toolkit/">Toolkit</a>
-<a class="hover:text-[var(--mg-green)]" href="https://blog.pricingforprofit.co">Blog</a>
-<a class="hover:text-[var(--mg-blue)]" href="https://mikeguides8.gumroad.com" target="_blank" rel="noopener">Store</a>
-<a class="hover:text-[var(--mg-blue)]" href="/#contact">Contact</a>
-</nav>
-</header>
-
-<main class="flex-1 mg-container py-8">
-<!-- Page Header -->
-<div class="text-center mb-10">
-<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 mb-3">
-🎯 AI-Powered Tool
-</span>
-<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
-AI Content Calendar Builder
-</h1>
-<p class="text-lg text-slate-600 max-w-3xl mx-auto">
-Generate a strategic 30-day content plan optimized by algorithms. Get industry-specific timing,
-platform recommendations, and performance predictions.
-</p>
-</div>
-
-<!-- Two-column layout: Inputs + Calendar -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-<!-- Left Column: Configuration Panel -->
-<div class="lg:col-span-1">
-<div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm sticky top-8">
-<h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-<span class="text-[var(--mg-blue)]">⚙️</span> Calendar Settings
-</h2>
-
-<!-- Industry Selection -->
-<div class="mb-6">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Industry / Business Type
-</label>
-<select id="industry" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-<option value="">Select your industry</option>
-<option value="ecommerce">E-commerce & Retail</option>
-<option value="b2b">B2B & Services</option>
-<option value="saas">SaaS & Tech</option>
-<option value="agency">Marketing Agency</option>
-<option value="creator">Content Creator</option>
-<option value="health">Health & Wellness</option>
-<option value="education">Education</option>
-<option value="consulting">Consulting</option>
-</select>
-</div>
-
-<!-- Platform Selection -->
-<div class="mb-6">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Content Platforms
-</label>
-<div class="space-y-2">
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="instagram" class="rounded text-blue-600">
-<span>Instagram</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="facebook" class="rounded text-blue-600">
-<span>Facebook</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="linkedin" class="rounded text-blue-600">
-<span>LinkedIn</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="tiktok" class="rounded text-blue-600">
-<span>TikTok</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="twitter" class="rounded text-blue-600">
-<span>Twitter/X</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="platform" value="pinterest" class="rounded text-blue-600">
-<span>Pinterest</span>
-</label>
-</div>
-</div>
-
-<!-- Audience Size -->
-<div class="mb-6">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Audience Size
-</label>
-<div class="grid grid-cols-3 gap-2">
-<button type="button" data-size="small" class="size-option py-2 px-3 text-center border rounded-lg hover:bg-slate-50">
-Small<br><span class="text-xs text-slate-500">&lt; 10K</span>
-</button>
-<button type="button" data-size="medium" class="size-option active py-2 px-3 text-center border rounded-lg bg-blue-50 border-blue-200 text-blue-700">
-Medium<br><span class="text-xs text-blue-600">10K-100K</span>
-</button>
-<button type="button" data-size="large" class="size-option py-2 px-3 text-center border rounded-lg hover:bg-slate-50">
-Large<br><span class="text-xs text-slate-500">100K+</span>
-</button>
-</div>
-<input type="hidden" id="audienceSize" value="medium">
-</div>
-
-<!-- Content Goals -->
-<div class="mb-6">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Primary Goals
-</label>
-<div class="space-y-2">
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="goal" value="awareness" class="rounded text-blue-600">
-<span>Brand Awareness</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="goal" value="engagement" class="rounded text-blue-600">
-<span>Engagement</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="goal" value="leads" class="rounded text-blue-600">
-<span>Lead Generation</span>
-</label>
-<label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-<input type="checkbox" name="goal" value="sales" class="rounded text-blue-600">
-<span>Direct Sales</span>
-</label>
-</div>
-</div>
-
-<!-- Content Themes -->
-<div class="mb-8">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Content Themes/Topics
-</label>
-<input type="text" id="contentThemes" placeholder="e.g., sustainability, productivity, tech tips"
-class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-<p class="text-xs text-slate-500 mt-1">Separate with commas</p>
-</div>
-
-<!-- Generate Button -->
-<button id="generateCalendar" class="w-full mg-btn-primary py-4 text-lg font-bold flex items-center justify-center gap-2">
-🚀 Generate AI-Optimized Calendar
-</button>
-
-<p class="text-xs text-slate-500 mt-3 text-center">
-No account required • 100% private • Algorithm-powered
-</p>
-</div>
-</div>
-
-<!-- Right Column: Calendar & Results -->
-<div class="lg:col-span-2">
-<!-- Calendar Output -->
-<div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-8">
-<div class="flex justify-between items-center mb-6">
-<h2 class="text-xl font-bold text-slate-900">
-📅 Your 30-Day Content Calendar
-</h2>
-<div class="flex gap-2">
-<button id="exportPDF" class="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50">
-📄 PDF
-</button>
-<button id="exportCSV" class="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50">
-📊 CSV
-</button>
-<button id="exportGoogle" class="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50">
-📅 Google
-</button>
-</div>
-</div>
-
-<div id="calendarOutput" class="min-h-[400px] flex items-center justify-center text-slate-400">
-<div class="text-center">
-<div class="text-5xl mb-4">📅</div>
-<p class="text-lg font-medium text-slate-700">Your calendar will appear here</p>
-<p class="text-slate-500">Configure your settings and click "Generate"</p>
-</div>
-</div>
-</div>
-
-<!-- AI Insights Panel -->
-<div id="aiInsights" class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-2xl p-6 mb-8 hidden">
-<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-🎯 AI Optimization Insights
-</h2>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-<!-- Optimal Times -->
-<div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-<h3 class="font-bold mb-3 flex items-center gap-2">
-⏰ Best Posting Times
-</h3>
-<div id="optimalTimesDisplay" class="text-sm"></div>
-</div>
-
-<!-- Content Mix -->
-<div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-<h3 class="font-bold mb-3 flex items-center gap-2">
-📊 Content Mix
-</h3>
-<div id="contentMixDisplay" class="text-sm"></div>
-</div>
-
-<!-- Performance Predictions -->
-<div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-<h3 class="font-bold mb-3 flex items-center gap-2">
-📈 Predictions
-</h3>
-<div id="performancePredictions" class="text-sm"></div>
-</div>
-</div>
-
-<div class="flex gap-3">
-<button id="applyOptimizations" class="px-5 py-2 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50">
-Apply Optimizations
-</button>
-<button id="saveCalendar" class="px-5 py-2 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30">
-Save Calendar
-</button>
-</div>
-</div>
-
-<!-- Email Notifications Panel -->
-<div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-<h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-📧 Email Reminders & Reports
-</h2>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<!-- Email Input -->
-<div>
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Your Email Address
-</label>
-<div class="flex gap-2">
-<input type="email" id="userEmail" placeholder="you@example.com"
-class="flex-1 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-<button id="setupEmail" class="px-5 py-3 bg-[var(--mg-green)] text-white font-semibold rounded-lg hover:opacity-90">
-Enable
-</button>
-</div>
-</div>
-
-<!-- Notification Preferences -->
-<div id="emailPreferences" class="hidden">
-<label class="block text-sm font-semibold text-slate-700 mb-2">
-Notification Preferences
-</label>
-<div class="space-y-2">
-<label class="flex items-center gap-2">
-<input type="checkbox" id="dailyReminders" checked class="rounded text-blue-600">
-<span class="text-sm">Daily posting reminders</span>
-</label>
-<label class="flex items-center gap-2">
-<input type="checkbox" id="weeklyReports" checked class="rounded text-blue-600">
-<span class="text-sm">Weekly performance reports</span>
-</label>
-<label class="flex items-center gap-2">
-<input type="checkbox" id="engagementAlerts" class="rounded text-blue-600">
-<span class="text-sm">High engagement alerts</span>
-</label>
-</div>
-</div>
-</div>
-
-<div id="emailConfirmation" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-<div class="flex items-center gap-2 text-green-800">
-<span class="text-lg">✅</span>
-<span class="font-semibold">Email notifications enabled!</span>
-</div>
-<p class="text-sm text-green-700 mt-1">
-You'll receive your first reminder tomorrow at your selected time.
-</p>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Usage Tips -->
-<div class="mt-12 bg-blue-50 border border-blue-100 rounded-2xl p-6">
-<h3 class="text-lg font-bold text-slate-900 mb-3">💡 How to Use This Calendar</h3>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div class="p-3">
-<div class="font-semibold text-blue-700 mb-1">1. Configure Settings</div>
-<p class="text-sm text-slate-600">Select your industry, platforms, and goals for personalized optimization.</p>
-</div>
-<div class="p-3">
-<div class="font-semibold text-blue-700 mb-1">2. Generate & Review</div>
-<p class="text-sm text-slate-600">The AI creates a 30-day plan with optimal times and content types.</p>
-</div>
-<div class="p-3">
-<div class="font-semibold text-blue-700 mb-1">3. Export & Execute</div>
-<p class="text-sm text-slate-600">Export to your preferred format or enable email reminders.</p>
-</div>
-</div>
-</div>
-</main>
-
-<!-- Footer matching your site -->
-<footer class="mt-16 border-t border-slate-200 py-8">
-<div class="mg-container">
-<div class="text-center">
-<p class="text-slate-600">
-Part of the <a href="/toolkit/" class="text-[var(--mg-blue)] font-semibold">MikeGuides Toolkit</a>
-</p>
-<p class="text-sm text-slate-500 mt-2">
-© 2024 MikeGuides. Interactive business tools.
-</p>
-</div>
-</div>
-</footer>
-
-<!-- Scripts -->
-<script src="calendar-engine.js"></script>
-<script src="email-system.js"></script>
-
-<script>
-// Initialize EmailJS with YOUR User ID
-(function() {
-  // REPLACE WITH YOUR ACTUAL EMAILJS USER ID
-  emailjs.init("PGJNJQQlp4g7pNkgL");
-})();
-
-// Simple UI interactions
-document.addEventListener('DOMContentLoaded', function() {
-  // Audience size buttons
-  document.querySelectorAll('.size-option').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700'));
-      this.classList.add('active', 'bg-blue-50', 'border-blue-200', 'text-blue-700');
-      document.getElementById('audienceSize').value = this.dataset.size;
+    <!-- YOUR JAVASCRIPT CODE GOES HERE -->
+    <script>
+    // ============================================
+    // AI CONTENT CALENDAR ENGINE - FIXED VERSION
+    // ============================================
+    
+    // Industry algorithms
+    const industryAlgorithms = {
+        creator: {
+            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
+            bestHours: [12, 17, 20, 22],
+            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
+            contentIdeas: [
+                "Day in the life vlog",
+                "Q&A session with followers",
+                "MikeGuides product showcase",
+                "Behind-the-scenes creation",
+                "Tutorial on using MikeGuides",
+                "Success story with MikeGuides"
+            ]
+        },
+        ecommerce: {
+            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
+            bestHours: [9, 12, 15, 19, 21],
+            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
+            contentIdeas: [
+                "Product showcase video",
+                "Customer testimonial story",
+                "Flash sale announcement",
+                "How-to use product tutorial"
+            ]
+        },
+        b2b: {
+            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+            bestHours: [8, 10, 14, 16],
+            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
+            contentIdeas: [
+                "Case study highlight",
+                "Industry insights report",
+                "Team expertise showcase"
+            ]
+        }
+    };
+    
+    // Platform colors
+    const platformColors = {
+        instagram: '#E4405F',
+        facebook: '#1877F6',
+        linkedin: '#0A66C2',
+        tiktok: '#000000',
+        twitter: '#1DA1F2',
+        pinterest: '#E60023'
+    };
+    
+    // EmailJS Configuration
+    const EMAIL_CONFIG = {
+        service_id: 'YOUR_SERVICE_ID_HERE',
+        template_id: 'template_welcome',
+        user_id: 'YOUR_USER_ID_HERE'
+    };
+    
+    // Initialize EmailJS
+    emailjs.init(EMAIL_CONFIG.user_id);
+    
+    // Store current calendar data
+    let currentCalendarData = null;
+    
+    // Get user inputs - FIXED VERSION
+    function gatherUserInputs() {
+        const industry = document.getElementById('industry').value;
+        console.log('Industry selected:', industry);
+        
+        const platforms = [];
+        document.querySelectorAll('#platforms input[type="checkbox"]:checked').forEach(cb => {
+            platforms.push(cb.value);
+        });
+        console.log('Platforms selected:', platforms);
+        
+        const audienceSize = document.getElementById('audienceSize').value;
+        const themes = document.getElementById('themes').value.split(',').map(t => t.trim()).filter(t => t);
+        
+        return { industry, platforms, audienceSize, themes };
+    }
+    
+    // Generate calendar
+    function generateCalendar() {
+        console.log('=== GENERATING CALENDAR ===');
+        
+        const inputs = gatherUserInputs();
+        console.log('Inputs gathered:', inputs);
+        
+        // Validate
+        if (!inputs.industry) {
+            showMessage('Please select an industry', 'error');
+            return;
+        }
+        if (inputs.platforms.length === 0) {
+            showMessage('Please select at least one platform', 'error');
+            return;
+        }
+        
+        // Show loading
+        const btn = document.getElementById('generateBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '⏳ Generating AI Calendar...';
+        btn.disabled = true;
+        
+        // Simulate AI processing
+        setTimeout(() => {
+            const calendarData = createCalendarData(inputs);
+            currentCalendarData = calendarData;
+            
+            displayCalendar(calendarData);
+            displayAIInsights(calendarData, inputs);
+            
+            // Reset button
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            showMessage('Calendar generated successfully!', 'success');
+        }, 800);
+    }
+    
+    // Create calendar data
+    function createCalendarData(inputs) {
+        const { industry, platforms, audienceSize, themes } = inputs;
+        const algorithm = industryAlgorithms[industry] || industryAlgorithms.creator;
+        
+        console.log('Using algorithm for industry:', industry);
+        console.log('Platforms for generation:', platforms);
+        
+        const calendar = [];
+        const today = new Date();
+        
+        // Posts per day based on audience size
+        const postsPerDay = { small: 2, medium: 3, large: 4 };
+        const dailyPosts = postsPerDay[audienceSize] || 2;
+        
+        // Generate 14 days (for demo)
+        for (let i = 0; i < 14; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            
+            const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            // Only generate on optimal days
+            if (algorithm.bestDays.includes(dayOfWeek)) {
+                const posts = [];
+                
+                for (let p = 0; p < dailyPosts; p++) {
+                    const platform = platforms[p % platforms.length];
+                    const hourIndex = p % algorithm.bestHours.length;
+                    const hour = algorithm.bestHours[hourIndex];
+                    
+                    // Format time
+                    const period = hour >= 12 ? 'PM' : 'AM';
+                    const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+                    const time = `${displayHour}:00 ${period}`;
+                    
+                    // Get content idea
+                    const ideaIndex = (i + p) % algorithm.contentIdeas.length;
+                    let content = algorithm.contentIdeas[ideaIndex];
+                    
+                    // Add theme if provided
+                    if (themes.length > 0) {
+                        const themeIndex = i % themes.length;
+                        content += ` about ${themes[themeIndex]}`;
+                    }
+                    
+                    // Estimate engagement
+                    const engagement = (Math.random() * 5 + 2).toFixed(1);
+                    
+                    posts.push({
+                        platform,
+                        type: platform === 'instagram' ? 'Reel' : 
+                              platform === 'tiktok' ? 'Video' : 
+                              platform === 'linkedin' ? 'Article' : 'Post',
+                        optimalTime: time,
+                        content: content,
+                        estimatedEngagement: engagement,
+                        color: platformColors[platform] || '#3b82f6'
+                    });
+                }
+                
+                calendar.push({
+                    date: date.toISOString().split('T')[0],
+                    dayName: dayOfWeek,
+                    dayOfMonth: date.getDate(),
+                    month: date.toLocaleDateString('en-US', { month: 'short' }),
+                    posts: posts
+                });
+            }
+        }
+        
+        return {
+            calendar: calendar,
+            metadata: {
+                totalPosts: calendar.reduce((sum, day) => sum + day.posts.length, 0),
+                totalDays: calendar.length,
+                platforms: platforms,
+                industry: industry
+            }
+        };
+    }
+    
+    // Display calendar
+    function displayCalendar(calendarData) {
+        const container = document.getElementById('calendarOutput');
+        
+        if (!calendarData.calendar.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div>📅</div>
+                    <h3>No posts scheduled</h3>
+                    <p>Try selecting more platforms or different days</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = `
+            <div style="margin-bottom: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+                <strong>${calendarData.metadata.totalDays} days</strong> • 
+                <strong>${calendarData.metadata.totalPosts} posts</strong> • 
+                ${calendarData.metadata.platforms.join(', ')}
+            </div>
+            <div class="calendar-grid">
+        `;
+        
+        calendarData.calendar.forEach(day => {
+            html += `
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <div>
+                            <strong>${day.dayOfMonth} ${day.month}</strong>
+                            <div style="font-size: 14px; color: #64748b;">${day.dayName}</div>
+                        </div>
+                    </div>
+            `;
+            
+            day.posts.forEach(post => {
+                html += `
+                    <div class="post ${post.platform}" style="border-left-color: ${post.color}">
+                        <div class="post-header">
+                            <span class="post-time">${post.optimalTime}</span>
+                            <span class="post-platform" style="background: ${post.color}20; color: ${post.color}">
+                                ${post.platform}
+                            </span>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-footer">
+                            <span>${post.type}</span>
+                            <span>👍 ${post.estimatedEngagement}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        });
+        
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+    
+    // Display AI insights
+    function displayAIInsights(calendarData, inputs) {
+        const insightsPanel = document.getElementById('aiInsights');
+        insightsPanel.style.display = 'block';
+        
+        const algorithm = industryAlgorithms[inputs.industry] || industryAlgorithms.creator;
+        document.getElementById('insightsContent').innerHTML = `
+            <p><strong>Best days:</strong> ${algorithm.bestDays.join(', ')}</p>
+            <p><strong>Best hours:</strong> ${algorithm.bestHours.map(h => `${h}:00`).join(', ')}</p>
+            <p><strong>Content mix:</strong> Educational ${algorithm.contentMix.educational}%, 
+               Promotional ${algorithm.contentMix.promotional}%</p>
+        `;
+    }
+    
+    // Email functions
+    function setupEmailNotifications() {
+        const email = document.getElementById('userEmail').value.trim();
+        
+        if (!validateEmail(email)) {
+            showMessage('Please enter a valid email address', 'error');
+            return;
+        }
+        
+        // Save email to localStorage
+        localStorage.setItem('mg_calendar_email', email);
+        
+        // Show confirmation
+        document.getElementById('emailConfirmation').style.display = 'block';
+        
+        // Update button
+        const btn = document.getElementById('setupEmail');
+        btn.textContent = '✓ Enabled';
+        btn.style.background = '#6b7280';
+        
+        // Send welcome email
+        sendWelcomeEmail(email);
+        
+        showMessage('Email notifications enabled!', 'success');
+    }
+    
+    function sendWelcomeEmail(email) {
+        if (!currentCalendarData) return;
+        
+        const templateParams = {
+            to_email: email,
+            user_name: email.split('@')[0],
+            calendar_duration: '30 days',
+            total_posts: currentCalendarData.metadata.totalPosts,
+            platforms: currentCalendarData.metadata.platforms.join(', '),
+            best_time: '9:00 AM',
+            dashboard_link: window.location.href
+        };
+        
+        // Send email via EmailJS
+        if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'YOUR_USER_ID_HERE') {
+            emailjs.send(EMAIL_CONFIG.service_id, EMAIL_CONFIG.template_id, templateParams)
+                .then(response => {
+                    console.log('Welcome email sent:', response.status);
+                })
+                .catch(error => {
+                    console.log('EmailJS error:', error);
+                });
+        } else {
+            console.log('Demo mode: Welcome email would be sent to:', email);
+        }
+    }
+    
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    // Utility functions
+    function showMessage(text, type = 'success') {
+        const div = document.createElement('div');
+        div.className = 'success-message';
+        div.style.background = type === 'success' ? '#10b981' : 
+                             type === 'error' ? '#ef4444' : '#3b82f6';
+        div.textContent = text;
+        
+        document.body.appendChild(div);
+        
+        setTimeout(() => {
+            div.remove();
+        }, 3000);
+    }
+    
+    // ============================================
+    // UI EVENT HANDLERS
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 AI Content Calendar loading...');
+        
+        // Platform selection
+        document.querySelectorAll('#platforms .platform-label').forEach(label => {
+            // Set initial visual state
+            const checkbox = label.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                if (checkbox.checked) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+                
+                // Click handler
+                label.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    checkbox.checked = !checkbox.checked;
+                    
+                    if (checkbox.checked) {
+                        this.classList.add('selected');
+                    } else {
+                        this.classList.remove('selected');
+                    }
+                    
+                    console.log(`Platform ${checkbox.value}: ${checkbox.checked ? 'ON' : 'OFF'}`);
+                });
+            }
+        });
+        
+        // Audience size selection
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('audienceSize').value = this.dataset.size;
+                console.log('Audience size:', this.dataset.size);
+            });
+        });
+        
+        // Industry selection
+        const industrySelect = document.getElementById('industry');
+        industrySelect.addEventListener('change', function() {
+            console.log('Industry changed to:', this.value);
+            localStorage.setItem('mg_calendar_industry', this.value);
+        });
+        
+        // Load saved industry if exists
+        const savedIndustry = localStorage.getItem('mg_calendar_industry');
+        if (savedIndustry) {
+            industrySelect.value = savedIndustry;
+        }
+        
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', generateCalendar);
+        
+        // Email setup button
+        document.getElementById('setupEmail').addEventListener('click', setupEmailNotifications);
+        
+        // Check for saved email
+        const savedEmail = localStorage.getItem('mg_calendar_email');
+        if (savedEmail) {
+            document.getElementById('userEmail').value = savedEmail;
+            document.getElementById('setupEmail').textContent = '✓ Enabled';
+            document.getElementById('setupEmail').style.background = '#6b7280';
+        }
+        
+        console.log('✅ AI Content Calendar loaded successfully!');
     });
-  });
-
-  // Platform checkboxes styling
-  document.querySelectorAll('input[name="platform"]').forEach(cb => {
-    cb.addEventListener('change', function() {
-      const parent = this.closest('label');
-      if (this.checked) {
-        parent.classList.add('bg-blue-50', 'border-blue-300');
-      } else {
-        parent.classList.remove('bg-blue-50', 'border-blue-300');
-      }
-    });
-  });
-});
-</script>
+    </script>
 </body>
 </html>
