@@ -1,0 +1,13 @@
+ai-content-calendar-generator/
+├── index.html                  # Main HTML file
+├── README.md                   # Documentation
+├── assets/
+│   ├── css/
+│   │   └── style.css          # Separate CSS
+│   ├── js/
+│   │   ├── calendar-engine.js # AI algorithms
+│   │   └── email-system.js    # Email functions
+│   └── images/
+│       ├── logo.png
+│       └── favicon.ico
+└── .gitignore
