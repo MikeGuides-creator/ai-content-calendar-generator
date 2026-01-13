@@ -312,69 +312,53 @@
     // ============================================
     
    // Replace the industryAlgorithms object in your index.html
-const industryAlgorithms = {
-    'guide-builder': {
-        bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
-        bestHours: [10, 14, 16, 20],
-        contentMix: { educational: 60, promotional: 20, entertainment: 10, engagement: 10 },
-        contentIdeas: [
-            "Step-by-step tutorial",
-            "Template showcase",
-            "Case study: Successful guide implementation",
-            "Common mistakes to avoid",
-            "Advanced tips for power users",
-            "Integration with other tools"
-        ],
-        hashtagStrategy: '#howto #tutorial #guide #tips #learning'
+const platformAlgorithms = {
+    instagram: {
+        postTypes: ['Reel', 'Carousel', 'Single Image', 'Story Series'],
+        optimalLength: '15-30 seconds for Reels',
+        bestFormats: ['Video', 'Carousel'],
+        hashtagCount: '5-15 hashtags'
     },
-    'content-creator': {
-        bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
-        bestHours: [12, 17, 20, 22],
-        contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
-        contentIdeas: [
-            "Behind-the-scenes creation process",
-            "Q&A with your audience",
-            "Collaboration announcement",
-            "Content creation tips",
-            "Tools and software you use",
-            "Day in the life vlog",
-            "Success metrics and analytics"
-        ],
-        hashtagStrategy: '#contentcreator #digitalcreator #creatoreconomy #contenttips'
+    facebook: {
+        postTypes: ['Video', 'Link Post', 'Photo Album', 'Live'],
+        optimalLength: '1-2 minutes for videos',
+        bestFormats: ['Video', 'Live'],
+        hashtagCount: '1-3 hashtags'
     },
-    'social-campaigns': {
-        bestDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        bestHours: [9, 12, 15, 18, 21],
-        contentMix: { educational: 20, promotional: 40, entertainment: 25, engagement: 15 },
-        contentIdeas: [
-            "Campaign launch announcement",
-            "User-generated content feature",
-            "Limited-time offer",
-            "Influencer collaboration",
-            "Campaign results preview",
-            "Interactive poll or contest",
-            "Testimonial highlight",
-            "Campaign behind-the-scenes"
-        ],
-        hashtagStrategy: '#campaign #socialmedia #marketing #digitalmarketing #promotion'
+    tiktok: {
+        postTypes: ['Trend Sound', 'How-to', 'Storytime', 'Duet'],
+        optimalLength: '21-34 seconds',
+        bestFormats: ['Trending Sounds', 'How-to Tutorials'],
+        hashtagCount: '3-5 trending hashtags'
+    },
+    discourse: {
+        postTypes: ['Discussion Thread', 'Poll', 'Announcement', 'Q&A'],
+        optimalLength: 'Detailed, 500-1000 words',
+        bestFormats: ['Discussion Threads', 'Polls'],
+        hashtagCount: 'Use categories instead of hashtags'
+    },
+    reddit: {
+        postTypes: ['AMA', 'Discussion', 'Meme', 'Article Share'],
+        optimalLength: 'Concise with engaging title',
+        bestFormats: ['Discussions', 'AMAs'],
+        hashtagCount: 'Subreddit-specific, no hashtags'
     }
 };
     
     // Platform colors
     const platformColors = {
-        instagram: '#E4405F',
-        facebook: '#1877F6',
-        linkedin: '#0A66C2',
-        tiktok: '#000000',
-        twitter: '#1DA1F2',
-        pinterest: '#E60023'
-    };
+    instagram: '#E4405F',
+    facebook: '#1877F2',
+    tiktok: '#000000',
+    discourse: '#00a2e8',
+    reddit: '#FF4500'
+};
     
     // EmailJS Configuration
     const EMAIL_CONFIG = {
-        service_id: 'YOUR_SERVICE_ID_HERE',
-        template_id: 'template_welcome',
-        user_id: 'YOUR_USER_ID_HERE'
+        service_id: 'service_l8e23hp',
+        template_id: 'service_l8e23hp',
+        user_id: 'PGJNJQQlp4g7pNkgL'
     };
     
     // Initialize EmailJS
