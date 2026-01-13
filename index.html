@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -202,7 +203,6 @@
     <div class="container">
         <header>
             <span class="tag">🚀 Human and AI-Powered Tool</span>
-            
             <h1>AI Content Calendar Builder</h1>
             <p>Generate a strategic 30-day content plan optimized by algorithms</p>
         </header>
@@ -223,6 +223,7 @@
                     </select>
                 </div>
                 
+<<<<<<< HEAD
                 <div class="platforms" id="platforms">
     <label class="platform-label selected" data-platform="instagram">
         <input type="checkbox" value="instagram" checked style="display: none;">
@@ -245,6 +246,29 @@
         Reddit
     </label>
 </div>
+=======
+                <div class="form-group">
+                    <label>Content Platforms</label>
+                    <div class="platforms" id="platforms">
+                        <label class="platform-label selected" data-platform="instagram">
+                            <input type="checkbox" value="instagram" checked style="display: none;">
+                            Instagram
+                        </label>
+                        <label class="platform-label" data-platform="facebook">
+                            <input type="checkbox" value="facebook" style="display: none;">
+                            Facebook
+                        </label>
+                        <label class="platform-label" data-platform="linkedin">
+                            <input type="checkbox" value="linkedin" style="display: none;">
+                            LinkedIn
+                        </label>
+                        <label class="platform-label" data-platform="tiktok">
+                            <input type="checkbox" value="tiktok" style="display: none;">
+                            TikTok
+                        </label>
+                    </div>
+                </div>
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
                 
                 <div class="form-group">
                     <label>Audience Size</label>
@@ -312,8 +336,8 @@
     // AI CONTENT CALENDAR ENGINE - FIXED VERSION
     // ============================================
     
-   // Replace the industryAlgorithms object in your index.html
 <<<<<<< HEAD
+   // Replace the industryAlgorithms object in your index.html
 const industryAlgorithms = {
     'guide-builder': {
         bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
@@ -371,8 +395,6 @@ const industryAlgorithms = {
     reddit: '#FF4500'
 };
 
-=======
->>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
 const platformAlgorithms = {
     instagram: {
         postTypes: ['Reel', 'Carousel', 'Single Image', 'Story Series'],
@@ -405,29 +427,61 @@ const platformAlgorithms = {
         hashtagCount: 'Subreddit-specific, no hashtags'
     }
 };
+=======
+    // Industry algorithms
+    const industryAlgorithms = {
+        creator: {
+            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
+            bestHours: [12, 17, 20, 22],
+            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
+            contentIdeas: [
+                "Day in the life vlog",
+                "Q&A session with followers",
+                "MikeGuides product showcase",
+                "Behind-the-scenes creation",
+                "Tutorial on using MikeGuides",
+                "Success story with MikeGuides"
+            ]
+        },
+        ecommerce: {
+            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
+            bestHours: [9, 12, 15, 19, 21],
+            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
+            contentIdeas: [
+                "Product showcase video",
+                "Customer testimonial story",
+                "Flash sale announcement",
+                "How-to use product tutorial"
+            ]
+        },
+        b2b: {
+            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+            bestHours: [8, 10, 14, 16],
+            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
+            contentIdeas: [
+                "Case study highlight",
+                "Industry insights report",
+                "Team expertise showcase"
+            ]
+        }
+    };
     
-<<<<<<< HEAD
+    // Platform colors
+    const platformColors = {
+        instagram: '#E4405F',
+        facebook: '#1877F6',
+        linkedin: '#0A66C2',
+        tiktok: '#000000',
+        twitter: '#1DA1F2',
+        pinterest: '#E60023'
+    };
+>>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
+    
     // EmailJS Configuration
     const EMAIL_CONFIG = {
         service_id: 'YOUR_SERVICE_ID_HERE',
         template_id: 'template_welcome',
         user_id: 'YOUR_USER_ID_HERE'
-=======
-    // Platform colors
-    const platformColors = {
-    instagram: '#E4405F',
-    facebook: '#1877F2',
-    tiktok: '#000000',
-    discourse: '#00a2e8',
-    reddit: '#FF4500'
-};
-    
-    // EmailJS Configuration
-    const EMAIL_CONFIG = {
-        service_id: 'service_l8e23hp',
-        template_id: 'service_l8e23hp',
-        user_id: 'PGJNJQQlp4g7pNkgL'
->>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
     };
     
     // Initialize EmailJS
@@ -913,8 +967,5 @@ hashtags: generateHashtags(platform, industry, themes)
     });
     </script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> f23039adfd7119cc5e2d996fd074a5b3fc7475a6
+
