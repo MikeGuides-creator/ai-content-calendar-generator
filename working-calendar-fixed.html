@@ -1,0 +1,551 @@
+<script>
+    // ============================================
+    // AI CONTENT CALENDAR ENGINE - FIXED VERSION
+    // ============================================
+    
+    // Industry algorithms
+    const industryAlgorithms = {
+        creator: {
+            bestDays: ['Wednesday', 'Thursday', 'Friday', 'Sunday'],
+            bestHours: [12, 17, 20, 22],
+            contentMix: { educational: 25, promotional: 15, entertainment: 45, engagement: 15 },
+            contentIdeas: [
+                "Day in the life vlog",
+                "Q&A session with followers",
+                "MikeGuides product showcase",
+                "Behind-the-scenes creation",
+                "Tutorial on using MikeGuides",
+                "Success story with MikeGuides"
+            ]
+        },
+        ecommerce: {
+            bestDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'],
+            bestHours: [9, 12, 15, 19, 21],
+            contentMix: { educational: 30, promotional: 40, entertainment: 20, engagement: 10 },
+            contentIdeas: [
+                "Product showcase video",
+                "Customer testimonial story",
+                "Flash sale announcement",
+                "How-to use product tutorial"
+            ]
+        },
+        b2b: {
+            bestDays: ['Tuesday', 'Wednesday', 'Thursday'],
+            bestHours: [8, 10, 14, 16],
+            contentMix: { educational: 50, promotional: 20, entertainment: 15, engagement: 15 },
+            contentIdeas: [
+                "Case study highlight",
+                "Industry insights report",
+                "Team expertise showcase"
+            ]
+        },
+        education: {
+            bestDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+            bestHours: [10, 14, 16, 20],
+            contentMix: { educational: 60, promotional: 10, entertainment: 20, engagement: 10 },
+            contentIdeas: [
+                "Educational tutorial",
+                "Study tips and tricks",
+                "Course announcement",
+                "Student success story"
+            ]
+        }
+    };
+    
+    // Platform colors
+    const platformColors = {
+        instagram: '#E4405F',
+        facebook: '#1877F6',
+        linkedin: '#0A66C2',
+        tiktok: '#000000',
+        twitter: '#1DA1F2',
+        pinterest: '#E60023'
+    };
+    
+    // EmailJS Configuration - UPDATE THESE!
+    const EMAIL_CONFIG = {
+        service_id: 'YOUR_SERVICE_ID_HERE',
+        template_id: 'template_welcome',
+        user_id: 'YOUR_USER_ID_HERE'
+    };
+    
+    // Initialize EmailJS
+    emailjs.init(EMAIL_CONFIG.user_id);
+    
+    // Store current calendar data
+    let currentCalendarData = null;
+    
+    // Get user inputs - FIXED VERSION
+    function gatherUserInputs() {
+        const industry = document.getElementById('industry').value;
+        console.log('Industry selected:', industry);
+        
+        const platforms = [];
+        document.querySelectorAll('#platforms input[type="checkbox"]:checked').forEach(cb => {
+            platforms.push(cb.value);
+        });
+        console.log('Platforms selected:', platforms);
+        
+        const audienceSize = document.getElementById('audienceSize').value;
+        const themes = document.getElementById('themes').value.split(',').map(t => t.trim()).filter(t => t);
+        
+        const goals = [];
+        if (document.getElementById('goal-awareness').checked) goals.push('awareness');
+        if (document.getElementById('goal-engagement').checked) goals.push('engagement');
+        if (document.getElementById('goal-leads').checked) goals.push('leads');
+        if (document.getElementById('goal-sales').checked) goals.push('sales');
+        
+        return { industry, platforms, audienceSize, themes, goals };
+    }
+    
+    // Generate calendar
+    function generateCalendar() {
+        console.log('=== GENERATING CALENDAR ===');
+        
+        const inputs = gatherUserInputs();
+        console.log('Inputs gathered:', inputs);
+        
+        // Validate
+        if (!inputs.industry) {
+            showMessage('Please select an industry', 'error');
+            return;
+        }
+        if (inputs.platforms.length === 0) {
+            showMessage('Please select at least one platform', 'error');
+            return;
+        }
+        
+        // Show loading
+        const btn = document.getElementById('generateBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '⏳ Generating AI Calendar...';
+        btn.disabled = true;
+        
+        // Simulate AI processing
+        setTimeout(() => {
+            const calendarData = createCalendarData(inputs);
+            currentCalendarData = calendarData;
+            
+            displayCalendar(calendarData);
+            displayAIInsights(calendarData, inputs);
+            
+            // Reset button
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            showMessage('Calendar generated successfully!', 'success');
+        }, 800);
+    }
+    
+    // Create calendar data
+    function createCalendarData(inputs) {
+        const { industry, platforms, audienceSize, themes } = inputs;
+        const algorithm = industryAlgorithms[industry] || industryAlgorithms.creator;
+        
+        console.log('Using algorithm for industry:', industry);
+        console.log('Platforms for generation:', platforms);
+        
+        const calendar = [];
+        const today = new Date();
+        
+        // Posts per day based on audience size
+        const postsPerDay = { small: 2, medium: 3, large: 4 };
+        const dailyPosts = postsPerDay[audienceSize] || 2;
+        
+        // Generate 14 days (for demo)
+        for (let i = 0; i < 14; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            
+            const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            // Only generate on optimal days
+            if (algorithm.bestDays.includes(dayOfWeek)) {
+                const posts = [];
+                
+                for (let p = 0; p < dailyPosts; p++) {
+                    const platform = platforms[p % platforms.length];
+                    const hourIndex = p % algorithm.bestHours.length;
+                    const hour = algorithm.bestHours[hourIndex];
+                    
+                    // Format time
+                    const period = hour >= 12 ? 'PM' : 'AM';
+                    const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+                    const time = `${displayHour}:00 ${period}`;
+                    
+                    // Get content idea
+                    const ideaIndex = (i + p) % algorithm.contentIdeas.length;
+                    let content = algorithm.contentIdeas[ideaIndex];
+                    
+                    // Add theme if provided
+                    if (themes.length > 0) {
+                        const themeIndex = i % themes.length;
+                        content += ` about ${themes[themeIndex]}`;
+                    }
+                    
+                    // Get content type based on mix
+                    const types = Object.keys(algorithm.contentMix);
+                    const weights = Object.values(algorithm.contentMix);
+                    let weightedTypes = [];
+                    types.forEach((type, index) => {
+                        for (let w = 0; w < weights[index]; w++) {
+                            weightedTypes.push(type);
+                        }
+                    });
+                    const contentType = weightedTypes[(i + p) % weightedTypes.length];
+                    
+                    // Estimate engagement
+                    const engagement = (Math.random() * 5 + 2).toFixed(1);
+                    
+                    posts.push({
+                        platform,
+                        type: platform === 'instagram' ? 'Reel' : 
+                              platform === 'tiktok' ? 'Video' : 
+                              platform === 'linkedin' ? 'Article' : 'Post',
+                        optimalTime: time,
+                        content: content,
+                        contentType: contentType,
+                        estimatedEngagement: engagement,
+                        color: platformColors[platform] || '#3b82f6'
+                    });
+                }
+                
+                calendar.push({
+                    date: date.toISOString().split('T')[0],
+                    dayName: dayOfWeek,
+                    dayOfMonth: date.getDate(),
+                    month: date.toLocaleDateString('en-US', { month: 'short' }),
+                    posts: posts
+                });
+            }
+        }
+        
+        return {
+            calendar: calendar,
+            metadata: {
+                totalPosts: calendar.reduce((sum, day) => sum + day.posts.length, 0),
+                totalDays: calendar.length,
+                platforms: platforms,
+                industry: industry
+            }
+        };
+    }
+    
+    // Display calendar
+    function displayCalendar(calendarData) {
+        const container = document.getElementById('calendarOutput');
+        
+        if (!calendarData.calendar.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div>📅</div>
+                    <h3>No posts scheduled</h3>
+                    <p>Try selecting more platforms or different days</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = `
+            <div style="margin-bottom: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+                <strong>${calendarData.metadata.totalDays} days</strong> • 
+                <strong>${calendarData.metadata.totalPosts} posts</strong> • 
+                ${calendarData.metadata.platforms.join(', ')} • 
+                Industry: ${calendarData.metadata.industry}
+            </div>
+            <div class="calendar-grid">
+        `;
+        
+        calendarData.calendar.forEach(day => {
+            html += `
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <div>
+                            <strong>${day.dayOfMonth} ${day.month}</strong>
+                            <div style="font-size: 14px; color: #64748b;">${day.dayName}</div>
+                        </div>
+                    </div>
+            `;
+            
+            day.posts.forEach(post => {
+                html += `
+                    <div class="post ${post.platform}" style="border-left-color: ${post.color}">
+                        <div class="post-header">
+                            <span class="post-time">${post.optimalTime}</span>
+                            <span class="post-platform" style="background: ${post.color}20; color: ${post.color}">
+                                ${post.platform}
+                            </span>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-footer">
+                            <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">${post.contentType}</span>
+                            <span>👍 ${post.estimatedEngagement}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        });
+        
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+    
+    // Display AI insights
+    function displayAIInsights(calendarData, inputs) {
+        const insightsPanel = document.getElementById('aiInsights');
+        insightsPanel.style.display = 'block';
+        
+        const algorithm = industryAlgorithms[inputs.industry] || industryAlgorithms.creator;
+        
+        // Optimal times
+        const optimalTimes = document.getElementById('optimalTimes');
+        optimalTimes.innerHTML = `
+            <div>Best days: ${algorithm.bestDays.join(', ')}</div>
+            <div>Best hours: ${algorithm.bestHours.map(h => `${h}:00`).join(', ')}</div>
+        `;
+        
+        // Content mix
+        const contentMix = document.getElementById('contentMix');
+        let mixHTML = '';
+        Object.entries(algorithm.contentMix).forEach(([type, percentage]) => {
+            mixHTML += `
+                <div style="margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span>${type}</span>
+                        <span>${percentage}%</span>
+                    </div>
+                    <div class="insight-bar">
+                        <div class="insight-fill" style="width: ${percentage}%"></div>
+                    </div>
+                </div>
+            `;
+        });
+        contentMix.innerHTML = mixHTML;
+        
+        // Performance predictions
+        const predictions = document.getElementById('performancePredictions');
+        const avgEngagement = calendarData.calendar.reduce((sum, day) => {
+            return sum + day.posts.reduce((postSum, post) => postSum + parseFloat(post.estimatedEngagement), 0);
+        }, 0) / calendarData.metadata.totalPosts;
+        
+        predictions.innerHTML = `
+            <div>Avg. engagement: <strong>${avgEngagement.toFixed(1)}%</strong></div>
+            <div>Weekly reach: <strong>1,200-1,800</strong></div>
+            <div>Time saved: <strong>${Math.round(calendarData.metadata.totalPosts * 0.25)} hours</strong></div>
+        `;
+    }
+    
+    // Email functions
+    function setupEmailNotifications() {
+        const email = document.getElementById('userEmail').value.trim();
+        const errorDiv = document.getElementById('emailError');
+        
+        // Hide any previous error
+        errorDiv.style.display = 'none';
+        
+        if (!validateEmail(email)) {
+            errorDiv.textContent = 'Please enter a valid email address';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        
+        // Save email to localStorage
+        localStorage.setItem('mg_calendar_email', email);
+        
+        // Show preferences
+        document.getElementById('emailPreferences').style.display = 'block';
+        document.getElementById('emailConfirmation').style.display = 'block';
+        
+        // Update button
+        const btn = document.getElementById('setupEmail');
+        btn.textContent = '✓ Enabled';
+        btn.style.background = '#6b7280';
+        btn.disabled = true;
+        
+        // Send welcome email
+        sendWelcomeEmail(email);
+        
+        showMessage('Email notifications enabled!', 'success');
+    }
+    
+    function sendWelcomeEmail(email) {
+        if (!currentCalendarData) return;
+        
+        const templateParams = {
+            to_email: email,
+            user_name: email.split('@')[0],
+            calendar_duration: '30 days',
+            total_posts: currentCalendarData.metadata.totalPosts,
+            platforms: currentCalendarData.metadata.platforms.join(', '),
+            best_time: '9:00 AM',
+            dashboard_link: window.location.href
+        };
+        
+        // Send email via EmailJS
+        if (EMAIL_CONFIG.user_id && EMAIL_CONFIG.user_id !== 'YOUR_USER_ID_HERE') {
+            emailjs.send(EMAIL_CONFIG.service_id, EMAIL_CONFIG.template_id, templateParams)
+                .then(response => {
+                    console.log('Welcome email sent:', response.status);
+                })
+                .catch(error => {
+                    console.log('EmailJS error:', error);
+                });
+        } else {
+            console.log('Demo mode: Welcome email would be sent to:', email);
+        }
+    }
+    
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    // Export functions
+    function exportPDF() {
+        showMessage('PDF export would be generated (requires backend setup)', 'info');
+    }
+    
+    function exportCSV() {
+        showMessage('CSV export would be generated', 'info');
+    }
+    
+    function exportGoogle() {
+        showMessage('Google Calendar integration would open', 'info');
+    }
+    
+    function saveCalendar() {
+        if (!currentCalendarData) {
+            showMessage('Please generate a calendar first', 'error');
+            return;
+        }
+        
+        // Save to localStorage for demo
+        const savedCalendars = JSON.parse(localStorage.getItem('mg_saved_calendars') || '[]');
+        currentCalendarData.savedAt = new Date().toISOString();
+        currentCalendarData.id = 'cal_' + Date.now();
+        savedCalendars.push(currentCalendarData);
+        
+        localStorage.setItem('mg_saved_calendars', JSON.stringify(savedCalendars));
+        
+        showMessage('Calendar saved locally!', 'success');
+    }
+    
+    function applyOptimizations() {
+        showMessage('Optimizations applied to your calendar!', 'success');
+    }
+    
+    // Utility functions
+    function showMessage(text, type = 'success') {
+        const div = document.createElement('div');
+        div.className = 'success-message';
+        div.style.background = type === 'success' ? '#10b981' : 
+                             type === 'error' ? '#ef4444' : '#3b82f6';
+        div.textContent = text;
+        
+        document.body.appendChild(div);
+        
+        setTimeout(() => {
+            div.remove();
+        }, 3000);
+    }
+    
+    // ============================================
+    // UI EVENT HANDLERS - FIXED VERSION
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 AI Content Calendar loading...');
+        
+       // Platform selection - FIXED VERSION
+document.querySelectorAll('#platforms .platform-label').forEach(label => {
+    // Set initial visual state
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+        if (checkbox.checked) {
+            label.classList.add('selected');
+        } else {
+            label.classList.remove('selected');
+        }
+        
+        // Click handler
+        label.addEventListener('click', function(e) {
+            e.preventDefault();
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                this.classList.add('selected');
+            } else {
+                this.classList.remove('selected');
+            }
+            
+            console.log(`Platform ${checkbox.value}: ${checkbox.checked ? 'ON' : 'OFF'}`);
+        });
+    }
+});
+        
+        // ===== AUDIENCE SIZE SELECTION =====
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('audienceSize').value = this.dataset.size;
+                console.log('Audience size:', this.dataset.size);
+            });
+        });
+        
+        // ===== INDUSTRY SELECTION =====
+        const industrySelect = document.getElementById('industry');
+        // Don't force "creator" - let user choose
+        industrySelect.addEventListener('change', function() {
+            console.log('Industry changed to:', this.value);
+            localStorage.setItem('mg_calendar_industry', this.value);
+        });
+        
+        // Load saved industry if exists
+        const savedIndustry = localStorage.getItem('mg_calendar_industry');
+        if (savedIndustry) {
+            industrySelect.value = savedIndustry;
+        }
+        
+        // ===== GENERATE BUTTON =====
+        document.getElementById('generateBtn').addEventListener('click', generateCalendar);
+        
+        // ===== EMAIL SETUP BUTTON =====
+        document.getElementById('setupEmail').addEventListener('click', setupEmailNotifications);
+        
+        // Check for saved email
+        const savedEmail = localStorage.getItem('mg_calendar_email');
+        if (savedEmail) {
+            document.getElementById('userEmail').value = savedEmail;
+            document.getElementById('emailPreferences').style.display = 'block';
+            document.getElementById('setupEmail').textContent = '✓ Enabled';
+            document.getElementById('setupEmail').style.background = '#6b7280';
+            document.getElementById('setupEmail').disabled = true;
+        }
+        
+        console.log('✅ AI Content Calendar loaded successfully!');
+        console.log('Initial industry:', industrySelect.value);
+        console.log('Initial platforms:', Array.from(document.querySelectorAll('#platforms input[type="checkbox"]:checked')).map(cb => cb.value));
+    });
+	// === EXTRA DEBUGGING ===
+console.log('=== DEBUG: Checking Elements ===');
+console.log('Platform labels found:', document.querySelectorAll('#platforms .platform-label').length);
+console.log('Platform checkboxes found:', document.querySelectorAll('#platforms input[type="checkbox"]').length);
+
+// Log each platform
+document.querySelectorAll('#platforms .platform-label').forEach((label, index) => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    console.log(`Platform ${index}:`, {
+        dataset: label.dataset.platform,
+        hasCheckbox: !!checkbox,
+        checkboxValue: checkbox ? checkbox.value : 'none',
+        checkboxChecked: checkbox ? checkbox.checked : 'none'
+    });
+});
+
+// Force industry to show current value
+console.log('Industry element exists:', !!document.getElementById('industry'));
+console.log('Current industry value:', document.getElementById('industry').value);
+</script>

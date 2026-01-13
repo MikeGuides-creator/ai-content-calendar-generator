@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar Test</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        button { background: blue; color: white; padding: 10px; border: none; border-radius: 5px; }
+        .post { background: #e6f7ff; padding: 10px; margin: 5px; border-left: 4px solid blue; }
+    </style>
+</head>
+<body>
+    <h1>Calendar Test</h1>
+    <button onclick="test()">Generate Test Calendar</button>
+    <div id="output"></div>
+
+    <script>
+    // Simple calendar generation
+    function test() {
+        console.log("Test function called");
+        
+        // Create some fake calendar data
+        let html = '<h2>Test Calendar (7 days)</h2>';
+        
+        for (let i = 0; i < 7; i++) {
+            let date = new Date();
+            date.setDate(date.getDate() + i);
+            
+            html += `<div class="day">
+                <h3>${date.toDateString()}</h3>
+                <div class="post">9:00 AM - Instagram: Product showcase</div>
+                <div class="post">2:00 PM - Facebook: Customer testimonial</div>
+            </div>`;
+        }
+        
+        document.getElementById('output').innerHTML = html;
+        console.log("Calendar displayed");
+    }
+    
+    console.log("Page ready - click the button!");
+    </script>
+</body>
+</html>
