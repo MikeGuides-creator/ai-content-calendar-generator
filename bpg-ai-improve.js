@@ -1,4 +1,4 @@
-
+.
 export async function handler(event) {
   // Only allow POST
   if (event.httpMethod !== "POST") {
